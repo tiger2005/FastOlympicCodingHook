@@ -10,7 +10,7 @@ import re
 import time
 
 def decodeStringsOfFile(s):
-    L = ["<", ">", "/", "\\", "|", ":", "\"", "*", "?", '.']
+    L = ["<", ">", "/", "\\", "|", ":", "\"", "*", "?", ".", "\'"]
     for i in L:
         s = s.replace(i, "")
     s = re.sub('[^\x00-\xFF\u4e00-\u9fa5]', '', s)
