@@ -1,0 +1,16 @@
+{
+	// where your template file is
+	"template-file": "C:\\Users\\ZOE\\Documents\\SublimeText\\template.cpp",
+	// where to save your problem information
+	"parse-folder" : "C:\\Users\\ZOE\\Documents\\SublimeText\\parsed\\",
+	"server-port": 12345,
+	// how to stringify time
+	// %Y = Year
+	// %m = Month
+	// %d = Date
+	// %H = Hour
+	// %M = Minute
+	// %S = Second
+	"time-format" : "%Y-%m-%d %H:%M:%S",
+	"file-suffix": "cpp",
+}
