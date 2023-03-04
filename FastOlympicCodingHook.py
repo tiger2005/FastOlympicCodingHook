@@ -10,7 +10,7 @@ import re
 import time
 
 def decodeStringsOfFile(s):
-    L = ["<", ">", "/", "\\", "|", ":", "\"", "*", "?", ".", "\'"]
+    L = ["<", ">", "/", "\\", "|", ":", "\"", "*", "?", ".", "\'", "(", ")"]
     for i in L:
         s = s.replace(i, "")
     s = re.sub('[^\x00-\xFF\u4e00-\u9fa5]', '', s)
@@ -122,6 +122,7 @@ class CompetitiveCompanionServer:
         HandlerClass = MakeHandlerClassFromFilename()
         global httpd
         httpd = HTTPServer((host, port), HandlerClass)
+        httpd.allow_reuse_address = True
         print("Start server... - ::" + str(port))
         httpd.serve_forever()
         print("Server has been shutdown")
