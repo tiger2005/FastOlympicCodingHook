@@ -15,18 +15,19 @@ def decodeStringsOfFile(s):
         s = s.replace(i, "")
     s = re.sub('[^\x00-\xFF\u4e00-\u9fa5]', '', s)
     return s
+
 def MakeHandlerClassFromFilename():
     class HandleRequests(BaseHTTPRequestHandler):
         def do_POST(self):
+            print("POST received.")
             try:
                 content_length = int(self.headers['Content-Length'])
                 body = self.rfile.read(content_length)
-                print(body)
                 J = json.loads(body.decode('utf8'))
                 settings = sublime.load_settings("FastOlympicCodingHook.sublime-settings")
                 templateFile = settings.get("template-file")
                 parsedProblemsFolder = settings.get("parse-folder")
-                print("Received")
+                # print("Received ->", body)
                 g = open(templateFile, "r")
                 templ = g.read()
                 g.close()
@@ -110,13 +111,17 @@ def MakeHandlerClassFromFilename():
             except Exception as e:
                 print("Error handling POST - ``" + str(e))
             self.send_response(202)
+            self.send_header("pragma", "no-cache")
+            self.send_header("connection", "close")
+            self.send_header("Strict-Transport-Security", "max-age=0")
             self.end_headers()
+            return
     return HandleRequests
 
 
 class CompetitiveCompanionServer:
     def startServer():
-        host = 'localhost'
+        host = ''
         settings = sublime.load_settings("FastOlympicCodingHook.sublime-settings")
         port = settings.get("server-port", 12345)
         HandlerClass = MakeHandlerClassFromFilename()

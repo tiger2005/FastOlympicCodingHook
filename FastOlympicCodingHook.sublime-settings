@@ -3,7 +3,7 @@
 	"template-file": "C:\\Users\\ZOE\\Documents\\SublimeText\\template.cpp",
 	// where to save your problem information
 	"parse-folder" : "C:\\Users\\ZOE\\Documents\\SublimeText\\parsed\\",
-	"server-port": 12345,
+	"server-port": 1327,
 	// how to stringify time
 	// %Y = Year
 	// %m = Month
