@@ -12,13 +12,13 @@ import time
 def decodeStringsOfFile(s):
 	L = ["<", ">", "/", "\\", "|", ":", "\"", "*", "?", ".", "\'"]
 	if platform.system() != "Windows":
-		L.append('(')
-		L.append(')')
-		L.append('@')
-		L.append('#')
-		L.append('$')
-		L.append('&')
-		L.append('%')
+		L.append("(")
+		L.append(")")
+		L.append("@")
+		L.append("#")
+		L.append("$")
+		L.append("&")
+		L.append("%")
 	for i in L:
 		s = s.replace(i, "")
 	s = re.sub('[^\x00-\xFF\u4e00-\u9fa5]', '', s)
@@ -26,19 +26,19 @@ def decodeStringsOfFile(s):
 
 def MakeHandlerClassFromFilename():
 	class HandleRequests(BaseHTTPRequestHandler):
-		def newFile(tests):
-			dirc = parsedProblemsFolder + decodeStringsOfFile(tests["group"].replace(" ", "_")) + "/"
+		def newFile(self, tests):
+			dirc = self.parsedProblemsFolder + decodeStringsOfFile(tests["group"].replace(" ", "_")) + "/"
 			if not os.path.exists(dirc):
 				os.mkdir(dirc)
-			fn = dirc + decodeStringsOfFile(tests["name"].replace(" ", "_")) + '.' + settings.get("file-suffix", "cpp");
+			fn = dirc + decodeStringsOfFile(tests["name"].replace(" ", "_")) + '.' + self.settings.get("file-suffix", "cpp");
 			fl_size = -1
 			if not os.path.exists(fn):
 				cppF = open(fn, "w", encoding = "utf-8")
-				code = (templ
+				code = (this.templ
 					.replace("%$Problem$%" , tests["name"])
 					.replace("%$Contest$%" , tests["group"])
 					.replace("%$URL$%"   , tests["url"])
-					.replace("%$Time$%" , time.strftime(settings.get("time-format", "%Y-%m-%d %H:%M:%S"), time.localtime()))
+					.replace("%$Time$%" , time.strftime(self.settings.get("time-format", "%Y-%m-%d %H:%M:%S"), time.localtime()))
 					.replace("%$MemoryL$%" , str(tests["memoryLimit"]))
 					.replace("%$TimeL$%"   , str(tests["timeLimit"])))
 				cppF.write(code)
@@ -69,20 +69,20 @@ def MakeHandlerClassFromFilename():
 				content_length = int(self.headers['Content-Length'])
 				body = self.rfile.read(content_length)
 				J = json.loads(body.decode('utf8'))
-				settings = sublime.load_settings("FastOlympicCodingHook.sublime-settings")
-				templateFile = settings.get("template-file")
-				parsedProblemsFolder = settings.get("parse-folder")
+				self.settings = sublime.load_settings("FastOlympicCodingHook.sublime-settings")
+				self.templateFile = self.settings.get("template-file")
+				self.parsedProblemsFolder = self.settings.get("parse-folder")
 				# print("Received ->", body)
-				g = open(templateFile, "r")
-				templ = g.read()
+				g = open(self.templateFile, "r")
+				self.templ = g.read()
 				g.close()
 				if(type(J).__name__ == "array"):
 					for i in range(len(J)):
 						self.newFile(J[i])
 				else:
-					self.newFile(J[i])
+					self.newFile(J)
 			except Exception as e:
-				print("Error handling POST - ``" + str(e))
+				print("Error handling POST - " + str(e))
 			self.send_response(202)
 			self.send_header("pragma", "no-cache")
 			self.send_header("connection", "close")
