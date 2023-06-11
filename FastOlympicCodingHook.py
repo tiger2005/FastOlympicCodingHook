@@ -34,7 +34,7 @@ def MakeHandlerClassFromFilename():
 			fl_size = -1
 			if not os.path.exists(fn):
 				cppF = open(fn, "w", encoding = "utf-8")
-				code = (this.templ
+				code = (self.templ
 					.replace("%$Problem$%" , tests["name"])
 					.replace("%$Contest$%" , tests["group"])
 					.replace("%$URL$%"   , tests["url"])
